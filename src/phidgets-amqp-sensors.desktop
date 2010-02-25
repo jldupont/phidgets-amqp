@@ -1,0 +1,7 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=AMQP Messages for Phidgets - Sensors
+Comment=See http://jldupont.blogspot.com/
+Exec=phidgets-amqp-sensors
+Icon=phidgets-amqp-sensors

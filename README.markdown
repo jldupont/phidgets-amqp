@@ -40,6 +40,7 @@ On the "org.sensors" exchange, there are the following message keys:
 Message Format
 --------------
 
+The format used is JSON.
 
 
 AMQP Configuration
