@@ -27,6 +27,7 @@ from apps import app_ifk
      
 #Bus.debug=True
 
+import phidgetsamqp.api.config
 import phidgetsamqp.api.ifk_handler    #@UnusedImport
 import phidget.ifk
 

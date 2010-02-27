@@ -8,7 +8,7 @@ Homepage: http://jldupont.blogspot.com/
 
 Package: phidgets-amqp
 Architecture: all
-Depends: python (>= 2.6), python-notify (>= 0.1.1), python-amqplib (>=0.6), ${misc:Depends}, ${python:Depends}
+Depends: python (>= 2.6), python-notify (>= 0.1.1), python-amqplib (>=0.6), python-yaml (>=3.09), ${misc:Depends}, ${python:Depends}
 Description: Phidgets applications using AMQP Message Bus for device/input/output changes
  For more details, please see http://github.com/jldupont/phidgets-amqp
  .
