@@ -36,8 +36,9 @@ def hQuit(*pa):
 
 Bus.subscribe("%quit", hQuit)
 
-def idle():
-    Bus.publish("__idle__", "%poll")
+def idle(count=0):
+    Bus.publish("__idle__", "%poll", count)
+    count=count+1
     return True
 
 gobject.timeout_add(1000, idle)

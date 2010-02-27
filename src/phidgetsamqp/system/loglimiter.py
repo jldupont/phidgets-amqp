@@ -34,8 +34,22 @@ class LogLimiter(object):
         ## current poll count
         self.cpoll=0
     
-    def _hpoll(self, *_):
-        self.cpoll=self.cpoll+1
+    def _hllconfig(self, *p):
+        """ Log Limiter Configuration
+        
+            Either: 
+            @param key:   key
+            @param value: value
+            or:
+            @param dic: dictionary  
+        """
+        dic={}
+        try:     dic[p[0]]=p[1]
+        except:  dic=p[0]
+        self.map.update(dic)
+    
+    def _hpoll(self, pc):
+        self.cpoll=pc
     
     def _hllog(self, ltype, *p):
         
@@ -60,8 +74,9 @@ class LogLimiter(object):
     
     
 _ll=LogLimiter()
-Bus.subscribe("%llog", _ll._hllog)
-Bus.subscribe("%poll", _ll._hpoll)
+Bus.subscribe("%llog",     _ll._hllog)
+Bus.subscribe("%llconfig", _ll._hllconfig)
+Bus.subscribe("%poll",     _ll._hpoll)
 
 
 ## ======================================================================

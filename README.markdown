@@ -26,6 +26,7 @@ Messages Types
 
 On the "com.phidgets" exchange, there are the following message keys:
 
+- "devices.devices"
 - "device.state.attached"
 - "device.state.detached"
 - "device.state.error"
