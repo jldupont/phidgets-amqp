@@ -61,10 +61,10 @@ class APIHandler(object):
             self.log("%json-encode", "Error", "Error encoding to JSON: %s" % rmsg)
             return        
         msg = amqp.Message(jmsg)
-        msg.properties["delivery_mode"] = 1
-        msg.content_type="application/json"
+        msg.properties["delivery_mode"] = 2
+        #msg.content_type="application/json"
         try:
-            print "... sending, rkey(%s)" % rkey
+            print "... sending, cpoll(%s) rkey(%s)" % (self.cpoll, rkey)
             self.chan.basic_publish(msg, exchange=self.EXCH, routing_key=rkey)
         except Exception,e:
             print "sMsg: rkey(%s) jmsg(%s)" % (rkey, jmsg)
@@ -91,8 +91,9 @@ class APIHandler(object):
         self.cpoll=pc
         if not self.conn:
             delta=self.cpoll - self.cLastConnAttempt
-            self.cLastConnAttempt = pc
+            print "_hpoll, delta: ", delta
             if delta >= self.DEFAULT_CONN_RETRY:
+                self.cLastConnAttempt = pc                
                 self.setup()
         
     ## ======================================================
