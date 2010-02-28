@@ -19,7 +19,8 @@ class APIHandler(object):
     """
     PATH="/Device"
     
-    LCONFIG = {"%conn-error" :  4*60*60 
+    LCONFIG = {"%conn-open": 0
+               ,"%conn-error" :  4*60*60 
                ,"%json-encode": 4*60*60
                 }
     
@@ -51,18 +52,30 @@ class APIHandler(object):
         """Generated when an error on a device is detected"""
         self.sMsg("device.error", dic)
 
-    def sMsg(self, rkey, msg):
+    def sMsg(self, rkey, rmsg):
         if not self.conn:
             return
         
-        try:    jmsg=json.dumps(msg)
+        try:    jmsg=json.dumps(rmsg)
         except:
-            self.log("%json-encode", "Error", "Error encoding to JSON: %s" % msg)
+            self.log("%json-encode", "Error", "Error encoding to JSON: %s" % rmsg)
             return        
         msg = amqp.Message(jmsg)
         msg.properties["delivery_mode"] = 1
         msg.content_type="application/json"
-        self.chan.basic_publish(msg,exchange=self.EXCH, routing_key=rkey)        
+        try:
+            print "... sending, rkey(%s)" % rkey
+            self.chan.basic_publish(msg, exchange=self.EXCH, routing_key=rkey)
+        except Exception,e:
+            print "sMsg: rkey(%s) jmsg(%s)" % (rkey, jmsg)
+            self.log("%conn-error", "error", "Failed to send message to AMQP broker: %s" % e)
+            try:
+                self.chan.close()
+                self.conn.close()
+            except: pass
+            finally:
+                self.conn=None
+                self.chan=None   
 
     def _hconfig(self, config):
         """ Configuration Changed handler """
@@ -86,6 +99,7 @@ class APIHandler(object):
         
     def setup(self):
         """ Setup the connection & channel """
+        print "setup..."
         Bus.publish(self, "%config-amqp?")
         
         try:
@@ -106,8 +120,25 @@ class APIHandler(object):
             Bus.publish(self, "%conn-error")
             self.log("%conn-error", "error", 
                     "Failed to acquire channel on connection to AMQP broker. Exception(%s)" % e)
+            return
             
-            self.log("%conn-open", "info", "Connection to AMQP broker opened")
+        try:
+            self.chan.exchange_declare(exchange=self.EXCH, 
+                                       type="topic", durable=True, auto_delete=False,)
+        except Exception,e:
+            Bus.publish(self, "%conn-error")
+            self.log("%conn-error", "error", 
+                    "Failed to declare exchange on connection to AMQP broker. Exception(%s)" % e)
+            try:
+                self.chan.close()
+                self.conn.close()
+                self.chan=None
+                self.conn=None
+            except: pass
+            return
+            
+            
+        self.log("%conn-open", "info", "Connection to AMQP broker opened")
             
     def log(self, ltype, level, msg):
         Bus.publish(self, "%llog", ltype, level, msg)
