@@ -69,7 +69,7 @@ class ApiConfig(object):
             
         Bus.publish(self, "%config-amqp", self.config)
             
-    def usedefaults(self):
+    def useDefaults(self):
         self.config=self.DEFAULTS
         Bus.publish(self, "%config-amqp", self.config)
             

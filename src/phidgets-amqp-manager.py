@@ -27,6 +27,7 @@ from apps import app_manager
      
 #Bus.debug=True
 
+import phidgetsamqp.api.config          #@UnusedImport
 import phidgetsamqp.api.manager_handler #@UnusedImport
 import phidget.manager
 

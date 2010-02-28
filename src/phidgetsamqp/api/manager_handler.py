@@ -13,26 +13,27 @@ from amqplib import client_0_8 as amqp #@UnresolvedImport
 
 from system.mbus import Bus
 
-class DBusAPIHandler(object):
+class APIHandler(object):
     """
     DBus signals handler
     """
     PATH="/Device"
     
-    LCONFIG = {"%conn-error" : 4*60*60 
+    LCONFIG = {"%conn-error" :  4*60*60 
+               ,"%json-encode": 4*60*60
                 }
     
     DEFAULT_CONN_RETRY = 4
     EXCH="org.phidgets"
     
     def __init__(self):
-        self.config=None
+        self.config={}
         self.conn=None
         self.chan=None
         self.cpoll=0
         self.cLastConnAttempt=0
         Bus.publish(self,"%llconfig", self.LCONFIG)
-        
+        self.setup()
 
     def Devices(self, liste):
         """Generated when a device is attached to the host"""
@@ -51,9 +52,12 @@ class DBusAPIHandler(object):
         self.sMsg("device.error", dic)
 
     def sMsg(self, rkey, msg):
+        if not self.conn:
+            return
+        
         try:    jmsg=json.dumps(msg)
         except:
-            self.log("%json-encode", "warning", "Devices: error encoding to JSON: %s" % msg)
+            self.log("%json-encode", "Error", "Error encoding to JSON: %s" % msg)
             return        
         msg = amqp.Message(jmsg)
         msg.properties["delivery_mode"] = 1
@@ -82,6 +86,8 @@ class DBusAPIHandler(object):
         
     def setup(self):
         """ Setup the connection & channel """
+        Bus.publish(self, "%config-amqp?")
+        
         try:
             self.conn=amqp.Connection(insist=False, **self.config)
         except Exception,e:
@@ -108,7 +114,7 @@ class DBusAPIHandler(object):
 
     
 
-_handler=DBusAPIHandler()
+_handler=APIHandler()
 Bus.subscribe("%devices",         _handler.Devices)
 Bus.subscribe("%device-attached", _handler.Attached)
 Bus.subscribe("%device-detached", _handler.Detached)

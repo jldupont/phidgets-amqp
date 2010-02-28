@@ -7,6 +7,7 @@
 
     Created on 2010-02-26
 """
+__all__=[]
 
 from system.mbus import Bus
 
@@ -68,6 +69,7 @@ class LogLimiter(object):
 
         self.st[ltype] = self.cpoll
         
+        print "delta(%s) cdelta(%s) msg(%s)" % (delta, cdelta, msg)
         if delta >= cdelta:
             Bus.publish(self, "%log", level, "(%s:%s) %s" % (ltype, c, msg))
             
