@@ -18,7 +18,7 @@ import dbus.glib
 import gobject              #@UnresolvedImport
 
 gobject.threads_init()
-#dbus.glib.init_threads()
+dbus.glib.init_threads()
 
 from dbus.mainloop.glib import DBusGMainLoop
 DBusGMainLoop(set_as_default=True)
@@ -28,6 +28,7 @@ from apps import app_ifk
 #Bus.debug=True
 
 import phidgetsamqp.api.config
+import phidgetsamqp.api.ifk_manager    #@UnusedImport
 import phidgetsamqp.api.ifk_handler    #@UnusedImport
 import phidget.ifk
 
