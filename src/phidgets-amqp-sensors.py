@@ -7,7 +7,7 @@ import sys
 import gtk
 
 ## For development environment
-ppkg=os.path.abspath( os.getcwd() +"/phidgetsdbus")
+ppkg=os.path.abspath( os.getcwd() +"/phidgetsamqp")
 if os.path.exists(ppkg):
     sys.path.insert(0, ppkg)
 
@@ -27,8 +27,8 @@ from apps import app_sensors
      
 #Bus.debug=True
 
-import phidgetsamqp.api.sensors_handler    #@UnusedImport
-import phidget.config
+import phidgetsamqp.api.config
+import phidgetsamqp.api.sensors_manager    #@UnusedImport
 import phidget.sensors
 
 def hQuit(*pa):
@@ -36,10 +36,12 @@ def hQuit(*pa):
 
 Bus.subscribe("%quit", hQuit)
 
-def idle(count=0):
-    Bus.publish("__idle__", "%poll", count)
-    count=count+1
+pcount=0
+def idle():
+    global pcount
+    Bus.publish("__idle__", "%poll", pcount)
+    pcount=pcount+1
     return True
 
-gobject.timeout_add(1000, idle)
+gobject.timeout_add(250, idle)
 gtk.main()

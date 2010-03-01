@@ -37,17 +37,17 @@ class IfkAmqpAgent(object):
     def Din(self, serial, pin, value):
         """Generated when the state of a digital input changes"""
         if self.comm:
-            self.comm.publish("device.din", {"serial": serial, "pin":pin, "value": value})
+            self.comm.publish("device.io.din", {"serial": serial, "pin":pin, "value": value})
 
     def Dout(self, serial, pin, value):
         """Generated when the state of a digital output changes"""
         if self.comm:
-            self.comm.publish("device.dout", {"serial": serial, "pin":pin, "value": value})
+            self.comm.publish("device.io.dout", {"serial": serial, "pin":pin, "value": value})
 
     def Ain(self, serial, pin, value):
         """Generated when the state of an analog input changes"""
         if self.comm:
-            self.comm.publish("device.ain", {"serial": serial, "pin":pin, "value": value})
+            self.comm.publish("device.io.ain", {"serial": serial, "pin":pin, "value": value})
         
 
     def _hpoll(self, pc):
