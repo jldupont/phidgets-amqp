@@ -10,15 +10,9 @@ import json
 
 from amqplib import client_0_8 as amqp #@UnresolvedImport
 
-
 from system.mbus import Bus
 
 class APIHandler(object):
-    """
-    DBus signals handler
-    """
-    PATH="/Device"
-    
     LCONFIG = {"%conn-open": 0
                ,"%conn-error" :  4*60*60 
                ,"%json-encode": 4*60*60

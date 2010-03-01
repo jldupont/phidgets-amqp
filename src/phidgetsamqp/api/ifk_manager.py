@@ -118,6 +118,9 @@ class IfkManagerAgent(object):
     def _hConfigAmqp(self, config):
         self.oq.put(("config-amqp", config))
         
+    def _hquit(self):
+        self.oq.put(("quit", None))
+        
     def _hpoll(self, pc):
         """ Publishes any messages queued
             to the local Bus
@@ -136,6 +139,7 @@ class IfkManagerAgent(object):
         return msg
 
     def processMsg(self, data):
+        
         try:   
             devices=json.loads(data)
         except Exception,e:
@@ -156,3 +160,4 @@ class IfkManagerAgent(object):
 _ifkm=IfkManagerAgent(qToManagerConsumer, qFromManagerConsumer)
 Bus.subscribe("%config-amqp", _ifkm._hConfigAmqp)
 Bus.subscribe("%poll",        _ifkm._hpoll)
+Bus.subscribe("%quit",        _ifkm._hquit)
