@@ -18,7 +18,7 @@ import dbus.glib
 import gobject              #@UnresolvedImport
 
 gobject.threads_init()
-dbus.glib.init_threads()
+#dbus.glib.init_threads()
 
 from dbus.mainloop.glib import DBusGMainLoop
 DBusGMainLoop(set_as_default=True)
@@ -43,5 +43,5 @@ def idle():
     pcount=pcount+1
     return True
 
-gobject.timeout_add(1000, idle)
+gobject.timeout_add(250, idle)
 gtk.main()

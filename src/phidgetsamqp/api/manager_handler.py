@@ -34,7 +34,7 @@ class APIHandler(object):
         self.cpoll=0
         self.cLastConnAttempt=0
         Bus.publish(self,"%llconfig", self.LCONFIG)
-        self.setup()
+        #self.setup()
 
     def Devices(self, liste):
         """Generated when a device is attached to the host"""
@@ -62,12 +62,13 @@ class APIHandler(object):
             return        
         msg = amqp.Message(jmsg)
         msg.properties["delivery_mode"] = 2
-        #msg.content_type="application/json"
+        msg.content_type="application/json"
+        
         try:
-            print "... sending, cpoll(%s) rkey(%s)" % (self.cpoll, rkey)
+            #print "... sending, cpoll(%s) rkey(%s)" % (self.cpoll, rkey)
             self.chan.basic_publish(msg, exchange=self.EXCH, routing_key=rkey)
         except Exception,e:
-            print "sMsg: rkey(%s) jmsg(%s)" % (rkey, jmsg)
+            #print "sMsg: rkey(%s) jmsg(%s)" % (rkey, jmsg)
             self.log("%conn-error", "error", "Failed to send message to AMQP broker: %s" % e)
             try:
                 self.chan.close()
@@ -91,7 +92,6 @@ class APIHandler(object):
         self.cpoll=pc
         if not self.conn:
             delta=self.cpoll - self.cLastConnAttempt
-            print "_hpoll, delta: ", delta
             if delta >= self.DEFAULT_CONN_RETRY:
                 self.cLastConnAttempt = pc                
                 self.setup()
@@ -100,11 +100,10 @@ class APIHandler(object):
         
     def setup(self):
         """ Setup the connection & channel """
-        print "setup..."
         Bus.publish(self, "%config-amqp?")
         
         try:
-            self.conn=amqp.Connection(insist=False, **self.config)
+            self.conn=amqp.Connection(insist=True, **self.config)
         except Exception,e:
             self.conn=None
             Bus.publish(self, "%conn-error")
@@ -137,7 +136,6 @@ class APIHandler(object):
                 self.conn=None
             except: pass
             return
-            
             
         self.log("%conn-open", "info", "Connection to AMQP broker opened")
             

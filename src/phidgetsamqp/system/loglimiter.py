@@ -67,10 +67,9 @@ class LogLimiter(object):
         lpoll=self.st.get(ltype, 0)
         delta=self.cpoll - lpoll
 
-        self.st[ltype] = self.cpoll
-        
-        print "ltype(%s) delta(%s) cdelta(%s) msg(%s)" % (ltype, delta, cdelta, msg)
-        if delta >= cdelta:
+        #print "cpoll(%s) ltype(%s) delta(%s) cdelta(%s) msg(%s)" % (self.cpoll, ltype, delta, cdelta, msg)
+        if delta >= cdelta or lpoll==0:
+            self.st[ltype] = self.cpoll
             Bus.publish(self, "%log", level, "(%s:%s) %s" % (ltype, c, msg))
             
     

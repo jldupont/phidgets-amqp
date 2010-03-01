@@ -6,5 +6,6 @@
 mkdir -p $HOME/.phidgets-amqp
 
 cd /usr/lib/phidgets-amqp
+
 export DISPLAY=:0.0
 python phidgets-amqp-ifk.py

@@ -18,7 +18,7 @@ import dbus.glib
 import gobject              #@UnresolvedImport
 
 gobject.threads_init()
-dbus.glib.init_threads()
+#dbus.glib.init_threads()
 
 from dbus.mainloop.glib import DBusGMainLoop
 DBusGMainLoop(set_as_default=True)
@@ -36,9 +36,11 @@ def hQuit(*pa):
 
 Bus.subscribe("%quit", hQuit)
 
-def idle(count=0):
-    Bus.publish("__idle__", "%poll", count)
-    count=count+1
+pcount=0
+def idle():
+    global pcount
+    Bus.publish("__idle__", "%poll", pcount)
+    pcount=pcount+1
     return True
 
 gobject.timeout_add(250, idle)
