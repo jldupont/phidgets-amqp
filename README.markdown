@@ -59,11 +59,11 @@ The following parameters are supported:
 
 Example:
 
-## Using YAML "maps"
-host:          "localhost:5672"
-userid:       "joe"
-password:     "blo"
-virtual_host: "\"
+	## Using YAML "maps"
+	host:          "localhost:5672"
+	userid:       "joe"
+	password:     "blo"
+	virtual_host: "\"
 
 Sensors configuration
 =====================
@@ -72,39 +72,39 @@ Example "sensors.config" file (YAML syntax):
 
 Devices:
 
- ## Device unique id i.e. serial
- 80860:
-  pins:
-   -
-    type: din
-    pin:  3
-    name: porte_fournaise
-   - 
-    type: din
-   	pin:  4 
-   	name: porte_escalier
-   -
-    type: din
-    pin:  0
-    name: porte_garage_1
-   -
-    type: din
-    pin:  1
-    name: porte_garage_2
+	 ## Device unique id i.e. serial
+	 80860:
+	  pins:
+	   -
+	    type: din
+	    pin:  3
+	    name: porte_fournaise
+	   - 
+	    type: din
+	   	pin:  4 
+	   	name: porte_escalier
+	   -
+	    type: din
+	    pin:  0
+	    name: porte_garage_1
+	   -
+	    type: din
+	    pin:  1
+	    name: porte_garage_2
 
-States:
- porte_escalier:
-  0: Open
-  1: Closed
- porte_garage_1:
-  0: Open
-  1: Closed
- porte_garage_2:
-  0: Open
-  1: Closed
- porte_fournaise:
-  0: Open
-  1: Closed
+	States:
+	 porte_escalier:
+	  0: Open
+	  1: Closed
+	 porte_garage_1:
+	  0: Open
+	  1: Closed
+	 porte_garage_2:
+	  0: Open
+	  1: Closed
+	 porte_fournaise:
+	  0: Open
+	  1: Closed
 
 
 Installation
