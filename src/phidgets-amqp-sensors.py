@@ -43,5 +43,5 @@ def idle():
     pcount=pcount+1
     return True
 
-gobject.timeout_add(250, idle)
+gobject.timeout_add(100, idle)
 gtk.main()

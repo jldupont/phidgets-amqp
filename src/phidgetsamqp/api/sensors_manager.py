@@ -11,7 +11,6 @@
 """
 __all__=[]
 
-from time import sleep
 import json
 from Queue import Queue, Empty
 from threading import Thread
@@ -37,7 +36,7 @@ class ManagerMessagesConsumer(Thread):
     RKEY="device.io.#"
     RQU="q.sensors"
     
-    TIMEOUT=0.250
+    TIMEOUT=0.100
     
     def __init__(self, iq, oq):
         Thread.__init__(self)
@@ -64,7 +63,6 @@ class ManagerMessagesConsumer(Thread):
             if self.conn:
                 try:     self.chan.wait()
                 except:  self.closeConn()
-            sleep(self.TIMEOUT)
             
         
     def gMsg(self):
@@ -106,8 +104,7 @@ _mmc.start()
 
 
 class SensorsManagerAgent(object):
-    """
-    """
+    
     LCONFIG = { "%json-decode": 4*60*60
             }
 

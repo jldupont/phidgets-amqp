@@ -36,7 +36,7 @@ class ManagerMessagesConsumer(Thread):
     RKEY="device.devices"
     RQU="q.device.devices"
     
-    TIMEOUT=0.250
+    TIMEOUT=0.100
     
     def __init__(self, iq, oq):
         Thread.__init__(self)
