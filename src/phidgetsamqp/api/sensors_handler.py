@@ -8,44 +8,50 @@
 __all__=[]
 
 from system.mbus import Bus
+from system.amqp import AMQPCommTx #@UnresolvedImport
 
-
-class SensorsState(object):
-    """
-    DBus signals handler
-    """
-    PATH    = "/State"
-    BUS_NAME= "org.sensors"
-    INTERF  = "org.sensors"
+class SensorsHandlerAgent(object):
+    
+    EXCH="org.sensors"
     
     def __init__(self):
-        pass
+        self.config=None
+        self.comm=None
+    
+    def _hConfig(self, config):
+        self.config=config
+    
+    def _hPoll(self, pc):
+        if not self.config:
+            Bus.publish(self, "%config-amqp?")
+        
+        if not self.comm:
+            self.comm=AMQPCommTx(self.config, self.EXCH)
+            self.comm.connect()
+            
+        if not self.comm.isOk():
+            del self.comm
+            self.comm=None
+
     
     def State(self, device_id, sensor_name, sensor_state):
         """Generated when a sensor changes state"""
-    
+        if self.comm:
+            self.comm.publish("state.io", {"device_id": device_id, 
+                                           "sensor_name": sensor_name, 
+                                           "sensor_state": sensor_state})
 
-_shandler=SensorsState()
-Bus.subscribe("%state-changed", _shandler.State)
-
-
-class SensorsConfig(object):
-    """
-    DBus signals handler
-    """
-    PATH    = "/Config"
-    BUS_NAME= "org.sensors"
-    INTERF  = "org.sensors"
-    
-    def __init__(self):
-        pass
-        
-    def Sensors(self, config):
+    def ConfigSensors(self, config):
         """Generated when sensor configuration changess and
             also periodically
         """
+        if self.comm:
+            self.comm.publish("config", config)
     
 
-_chandler=SensorsConfig()
-Bus.subscribe("%config-sensors", _chandler.Sensors)
+_shandler=SensorsHandlerAgent()
+Bus.subscribe("%config-amqp",    _shandler._hConfig)
+Bus.subscribe("%state-changed",  _shandler.State)
+Bus.subscribe("%config-sensors", _shandler.ConfigSensors)
+Bus.subscribe("%poll",           _shandler._hPoll)
 

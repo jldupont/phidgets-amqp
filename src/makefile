@@ -38,9 +38,9 @@ install:
 	@install -D $(CURDIR)/*.desktop                        $(DESTDIR)/usr/share/applications/
 	@install -D $(CURDIR)/phidgetsdbus/apps/*.png          $(DESTDIR)/usr/share/icons/ 
 
-	@install $(CURDIR)/phidgets-manager                    $(DESTDIR)/usr/bin/
-	@install $(CURDIR)/phidgets-ifk                        $(DESTDIR)/usr/bin/
-	@install $(CURDIR)/phidgets-sensors                    $(DESTDIR)/usr/bin/
+	@install $(CURDIR)/phidgets-amqp-manager               $(DESTDIR)/usr/bin/
+	@install $(CURDIR)/phidgets-amqp-ifk                   $(DESTDIR)/usr/bin/
+	@install $(CURDIR)/phidgets-amqp-sensors               $(DESTDIR)/usr/bin/
 
 	@python -m compileall ${DESTDIR}$(BASE)/
 	@python -m compileall ${DESTDIR}$(BASE)/phidgetsdbus

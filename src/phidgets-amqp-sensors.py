@@ -27,8 +27,10 @@ from apps import app_sensors
      
 #Bus.debug=True
 
+import phidget.sensors_config
 import phidgetsamqp.api.config
 import phidgetsamqp.api.sensors_manager    #@UnusedImport
+import phidgetsamqp.api.sensors_handler    #@UnusedImport
 import phidget.sensors
 
 def hQuit(*pa):

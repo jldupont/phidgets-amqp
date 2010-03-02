@@ -35,6 +35,7 @@ class IfkAgent(object):
         self.serial=serial
         self._q=queue
         self._ic=0 ## digital input count
+        self._oc=0 ## digital output count
         self._sc=0 ## sensor input count
         
         try:
@@ -62,6 +63,10 @@ class IfkAgent(object):
         for index in range(0, self._ic):
             iv=self.ifk.getInputState(index)
             Bus.publish(self, "%device-din", self.serial, index, iv)
+
+        for index in range(0, self._oc):
+            iv=self.ifk.getOutputState(index)
+            Bus.publish(self, "%device-dout", self.serial, index, iv)
             
         for index in range(0, self._sc):
             iv=self.ifk.getSensorRawValue(index)
@@ -77,6 +82,12 @@ class IfkAgent(object):
             self._q.put(["%log", "info", "Device (%s) with %s digital inputs" % (self.serial, self._ic)])
         except:
             self._q.put(["%log", "warning", "Can't retrieve input count for serial(%s)" % self.serial])
+
+        try:
+            self._oc=self.ifk.getOutputCount()
+            self._q.put(["%log", "info", "Device (%s) with %s digital outputs" % (self.serial, self._oc)])
+        except:
+            self._q.put(["%log", "warning", "Can't retrieve output count for serial(%s)" % self.serial])
 
         try:
             self._sc=self.ifk.getSensorCount()

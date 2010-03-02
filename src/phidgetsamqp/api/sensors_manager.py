@@ -165,9 +165,13 @@ class SensorsManagerAgent(object):
         ##  i.e. ready for extensions
         
     def publishMsg(self, op, msg):
-        """
-        """
-        print self.__class__, "publish: ", op, msg
+        serial=msg.get("serial", None)
+        pin=msg.get("pin", None)
+        value=msg.get("value", None)
+        mtype="%" + "%s" % op  
+        print "publishMsg: mtype(%s), msg(%s)" % (mtype, msg)     
+        Bus.publish(self, mtype, serial, pin, value)
+
 
 
 _ifkm=SensorsManagerAgent(qToManagerConsumer, qFromManagerConsumer)

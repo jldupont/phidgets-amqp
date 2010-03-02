@@ -27,7 +27,9 @@ class AMQPComm(object):
             self.conn = amqp.Connection(insist=True, **self.config)
             self.chan = self.conn.channel()
             self.chan.exchange_declare(exchange=self.exch, type="topic", durable=True, auto_delete=False,)
-        except:
+            self.log("%conn-open", "info", "Connection to AMQP broker opened")
+        except Exception,e:
+            self.log("%conn-error", "error", "Error whilst connecting to AMQP broker (%s)" % e)
             self.closeConn()
             
     def closeConn(self):
@@ -63,11 +65,11 @@ class AMQPCommTx(AMQPComm):
         msg.content_type="application/json"
         
         if not self.chan:
-            Bus.publish(self, "%%llog", "%conn-error", "error", "Connection to AMQP broker not opened")
+            Bus.publish(self, "%llog", "%conn-error", "error", "Connection to AMQP broker not opened")
             return
         
         try:
-            #print "... sending, cpoll(%s) rkey(%s)" % (self.cpoll, rkey)
+            print "AMQPCommTx.publish: rkey(%s) msg(%s)" % (rkey, jmsg)
             self.chan.basic_publish(msg, exchange=self.exch, routing_key=rkey)
         except Exception,e:
             #print "sMsg: rkey(%s) jmsg(%s)" % (rkey, jmsg)
