@@ -37,7 +37,7 @@ class SensorsHandlerAgent(object):
     def StateChanged(self, sensor_type, device_id, sensor_name, sensor_state):
         """Generated when a sensor changes state"""
         if self.comm:
-            self.comm.publish("state.io." % sensor_type, 
+            self.comm.publish("state.io.%s" % sensor_type, 
                               {"sensor_type": sensor_type,
                                "device_id": device_id, 
                                 "sensor_name": sensor_name, 
