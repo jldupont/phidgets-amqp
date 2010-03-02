@@ -75,10 +75,22 @@ Devices:
  ## Device unique id i.e. serial
  80860:
   pins:
-   3: porte_fournaise
-   4: porte_escalier
-   0: porte_garage_1
-   1: porte_garage_2
+   -
+    type: din
+    pin:  3
+    name: porte_fournaise
+   - 
+    type: din
+   	pin:  4 
+   	name: porte_escalier
+   -
+    type: din
+    pin:  0
+    name: porte_garage_1
+   -
+    type: din
+    pin:  1
+    name: porte_garage_2
 
 States:
  porte_escalier:

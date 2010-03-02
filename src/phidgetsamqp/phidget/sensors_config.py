@@ -114,16 +114,31 @@ class ConfigAgent(object):
                     self.log("warning", "Expecting 'pins' entry for Device(%s) in 'Devices' section" % device_name)
                     return
                 
-                for pin in pins:
-                    pname=pins[pin]
-                    pinnames.extend([pname])
-                    try:    _ipin=int(pin)
+                for pin_entry in pins:
+                    try:    ptype=pin_entry["type"]
                     except:
-                        self.log("warning", "Expecting 'integer' value for pin entry, device(%s)" % device)
+                        self.log("warning", "Expecting 'type' field for pin entry, device(%s)" % device)
                         return
                     
+                    try:    pindex=pin_entry["pin"]
+                    except:
+                        self.log("warning", "Expecting 'pin' field for pin entry, device(%s)" % device)
+                        return
+                    
+                    try:    pname=pin_entry["name"]
+                    except:
+                        self.log("warning", "Expecting 'name' field for pin entry, device(%s)" % device)
+                        return
+
+                    try:    _ipin=int(pindex)
+                    except:
+                        self.log("warning", "Expecting 'integer' value for 'pin' field in pin entry, device(%s)" % device)
+                        return
+
+                    pinnames.extend([pname])
+                
                     ## stringify for less headache: normalize type
-                    m="%s.%s" % (device_name, pin)
+                    m="%s.%s.%s" % (device_name, ptype, pindex)
                     pinmap[m] = pname
         except:
             self.log("warning", "Error whilst validating 'Devices' section of configuration file")
