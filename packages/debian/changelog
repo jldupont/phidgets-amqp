@@ -1,5 +1,5 @@
-phidgets-amqp (_VERSION_-2jldupont1~_DIST_1)  _DIST_; urgency=low
+phidgets-amqp (_VERSION_-1jldupont1~_DIST_1)  _DIST_; urgency=low
 
-  * v1.0 - package 2
+  * v1.1 - package 1
  
  -- Jean-Lou Dupont <jl@jldupont.com>  Wed, 01 Mar 2010 07:17:00 -0500

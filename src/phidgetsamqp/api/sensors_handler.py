@@ -34,12 +34,14 @@ class SensorsHandlerAgent(object):
             self.comm=None
 
     
-    def State(self, device_id, sensor_name, sensor_state):
+    def StateChanged(self, sensor_type, device_id, sensor_name, sensor_state):
         """Generated when a sensor changes state"""
         if self.comm:
-            self.comm.publish("state.io", {"device_id": device_id, 
-                                           "sensor_name": sensor_name, 
-                                           "sensor_state": sensor_state})
+            self.comm.publish("state.io." % sensor_type, 
+                              {"sensor_type": sensor_type,
+                               "device_id": device_id, 
+                                "sensor_name": sensor_name, 
+                                "sensor_state": sensor_state})
 
     def ConfigSensors(self, config):
         """Generated when sensor configuration changess and
@@ -51,7 +53,7 @@ class SensorsHandlerAgent(object):
 
 _shandler=SensorsHandlerAgent()
 Bus.subscribe("%config-amqp",    _shandler._hConfig)
-Bus.subscribe("%state-changed",  _shandler.State)
+Bus.subscribe("%state-changed",  _shandler.StateChanged)
 Bus.subscribe("%config-sensors", _shandler.ConfigSensors)
 Bus.subscribe("%poll",           _shandler._hPoll)
 
