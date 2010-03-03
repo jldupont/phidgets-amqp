@@ -69,7 +69,7 @@ class AMQPCommTx(AMQPComm):
             return
         
         try:
-            print "AMQPCommTx.publish: rkey(%s) msg(%s)" % (rkey, jmsg)
+            #print "AMQPCommTx.publish: rkey(%s) msg(%s)" % (rkey, jmsg)
             self.chan.basic_publish(msg, exchange=self.exch, routing_key=rkey)
         except Exception,e:
             #print "sMsg: rkey(%s) jmsg(%s)" % (rkey, jmsg)

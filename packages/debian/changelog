@@ -1,5 +1,5 @@
 phidgets-amqp (_VERSION_-1jldupont1~_DIST_1)  _DIST_; urgency=low
 
-  * v1.3 - package 1
+  * v1.4 - timestamps support
  
  -- Jean-Lou Dupont <jl@jldupont.com>  Tue, 02 Mar 2010 07:17:00 -0500

@@ -36,7 +36,7 @@ On the "com.phidgets" exchange, there are the following message keys:
 
 On the "org.sensors" exchange, there are the following message keys:
 
-- "state.io"
+- "state.io.#"  (e.g. "state.io.din" , "state.io.dout", "state.io.ain")
 - "config"
 
 Message Format

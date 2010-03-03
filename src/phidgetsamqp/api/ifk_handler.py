@@ -13,6 +13,9 @@ from system.amqp import AMQPCommTx  #@UnresolvedImport
 
 class IfkAmqpAgent(object):
     """ Interface to AMQP
+    
+        Publishes the Ifk 'io' messages
+        on AMQP fabric through the "org.phidgets" exchange
     """
     EXCH="org.phidgets"
     
@@ -34,20 +37,20 @@ class IfkAmqpAgent(object):
         if self.comm:
             self.comm.publish("device.error", dic)
 
-    def Din(self, serial, pin, value):
+    def Din(self, dic):
         """Generated when the state of a digital input changes"""
         if self.comm:
-            self.comm.publish("device.io.din", {"serial": serial, "pin":pin, "value": value})
+            self.comm.publish("device.io.din", dic)
 
-    def Dout(self, serial, pin, value):
+    def Dout(self, dic):
         """Generated when the state of a digital output changes"""
         if self.comm:
-            self.comm.publish("device.io.dout", {"serial": serial, "pin":pin, "value": value})
+            self.comm.publish("device.io.dout", dic)
 
-    def Ain(self, serial, pin, value):
+    def Ain(self, dic):
         """Generated when the state of an analog input changes"""
         if self.comm:
-            self.comm.publish("device.io.ain", {"serial": serial, "pin":pin, "value": value})
+            self.comm.publish("device.io.ain", dic)
         
 
     def _hpoll(self, pc):

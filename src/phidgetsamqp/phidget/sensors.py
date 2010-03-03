@@ -33,25 +33,26 @@ class SensorsAgent(object):
     
     ## ==================================================
     
-    def _hDin(self, serial, pin, value):
-        pname, mval=self.domap(serial, "din", pin, value)
-        #print "SensorsAgent._hDin, %s, %s, %s, %s" % (serial, pin, value, pname)        
-        if mval is not None:
-            Bus.publish(self, "%state-changed", "din", serial, pname, mval)
+    def _hDin(self, dic):
+        self.processChange("din", dic)
     
-    def _hDout(self, serial, pin, value):
-        pname, mval=self.domap(serial, "dout", pin, value)
-        if mval is not None:
-            Bus.publish(self, "%state-changed", "dout", serial, pname, mval)
+    def _hDout(self, dic):
+        self.processChange("dout", dic)        
 
-
-    def _hAin(self, serial, pin, value):
-        pname, mval=self.domap(serial, "ain", pin, value)
-        if mval is not None:
-            Bus.publish(self, "%state-changed", "ain", serial, pname, mval)
-
+    def _hAin(self, dic):
+        self.processChange("ain", dic)
 
     ## ==================================================
+    
+    def processChange(self, iotype, dic):
+        serial=dic["serial"]
+        pin=dic["pin"]
+        value=dic["value"]
+        pname, mval=self.domap(serial, iotype, pin, value)
+        dic.update({"sensor_name": pname, "sensor_state": mval})
+        if mval is not None:
+            Bus.publish(self, "%state-changed", iotype, dic)
+    
     def domap(self, serial, ptype, pin, value):
         pn=self.pmap(serial, ptype, pin)
         pstates=self.states.get(pn, {})

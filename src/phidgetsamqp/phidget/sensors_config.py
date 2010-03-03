@@ -145,6 +145,15 @@ class ConfigAgent(object):
             return
         
         #print "pinnames: ",pinnames
+        try:
+            pinnames_states=states.keys()
+        except:
+            self.log("warning", "Cannot extract pin name(s) in any 'States' definition")
+            return
+        
+        for pinname in pinnames:
+            if not pinname in pinnames_states:
+                self.log("warning", "Cannot find pin name(%s) in any 'States' definition" % pinname)
         
         try:
             for pinname in states:

@@ -28,7 +28,6 @@ class APIHandler(object):
         self.cpoll=0
         self.cLastConnAttempt=0
         Bus.publish(self,"%llconfig", self.LCONFIG)
-        #self.setup()
 
     def Devices(self, liste):
         """Generated when a device is attached to the host"""

@@ -8,7 +8,7 @@
 __all__=[]
 
 from system.mbus import Bus
-from system.amqp import AMQPCommTx #@UnresolvedImport
+from system.amqp import AMQPCommTx  #@UnresolvedImport
 
 class SensorsHandlerAgent(object):
     
@@ -34,14 +34,10 @@ class SensorsHandlerAgent(object):
             self.comm=None
 
     
-    def StateChanged(self, sensor_type, device_id, sensor_name, sensor_state):
+    def StateChanged(self, sensor_type, dic):
         """Generated when a sensor changes state"""
         if self.comm:
-            self.comm.publish("state.io.%s" % sensor_type, 
-                              {"sensor_type": sensor_type,
-                               "device_id": device_id, 
-                                "sensor_name": sensor_name, 
-                                "sensor_state": sensor_state})
+            self.comm.publish("state.io.%s" % sensor_type, dic) 
 
     def ConfigSensors(self, config):
         """Generated when sensor configuration changess and

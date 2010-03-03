@@ -16,7 +16,7 @@
     Created on 2010-02-15
 """
 __all__=[]
-
+import time
 from Queue import Queue, Empty
 
 from system.mbus import Bus
@@ -62,15 +62,18 @@ class IfkAgent(object):
     def ping(self):
         for index in range(0, self._ic):
             iv=self.ifk.getInputState(index)
-            Bus.publish(self, "%device-din", self.serial, index, iv)
+            dic=self.prepareDic(index, iv)
+            Bus.publish(self, "%device-din", dic)
 
         for index in range(0, self._oc):
             iv=self.ifk.getOutputState(index)
-            Bus.publish(self, "%device-dout", self.serial, index, iv)
+            dic=self.prepareDic(index, iv)
+            Bus.publish(self, "%device-dout", dic)
             
         for index in range(0, self._sc):
             iv=self.ifk.getSensorRawValue(index)
-            Bus.publish(self, "%device-ain", self.serial, index, iv)
+            dic=self.prepareDic(index, iv)
+            Bus.publish(self, "%device-ain", dic)
         
         
     ## ---------------------------
@@ -97,28 +100,39 @@ class IfkAgent(object):
     
     def _onDetach(self, e):
         ## Message meant for the IFK manager
-        self._q.put(["%detached", self.serial])
+        self._q.put(["%detached", {"serial": self.serial}])
     
     def _onError(self, e):
-        self._q.put(["%device-error", self.serial])        
+        self._q.put(["%device-error", {"serial":self.serial}])        
 
     def _onInputChanged(self, event):
-        i,s = self._getIS(event)
-        self._q.put(["%device-din", self.serial, i, s])        
+        self.sendMsg("%device-din", event)
     
     def _onOutputChanged(self, event):
-        i,s = self._getIS(event)
-        self._q.put(["%device-dout", self.serial, i, s])        
+        self.sendMsg("%device-dout", event)
     
     def _onSensorChanged(self, event):
-        i,s = self._getIS(event)
-        self._q.put(["%device-ain", self.serial, i, s])        
+        self.sendMsg("%device-ain", event)        
 
     ## --------------------------------
     ## HELPERS
+    def sendMsg(self, mtype, event):
+        msg=self.prepareMsg(mtype, event)
+        self._q.put(msg)
+
+    def prepareMsg(self, mtype, event):
+        pin_index, pin_state = self._getIS(event)
+        dic=self.prepareDic(pin_index, pin_state)
+        return [mtype, dic]
 
     def _getIS(self, event):
         return (event.index, event.state)
+    
+    def prepareDic(self, pin_index, pin_state):
+        return {"serial": self.serial, 
+                "pin": pin_index, "value": pin_state, 
+                "timestamp": time.time()}
+        
 
 ## =====================================================================
 

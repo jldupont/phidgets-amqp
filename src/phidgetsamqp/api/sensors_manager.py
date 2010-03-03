@@ -26,7 +26,7 @@ qFromManagerConsumer=Queue()
 
 class ManagerMessagesConsumer(Thread):
     """
-    Manages the reception of "device.devices" message
+    Manages the reception of "device.io" messages
     from the AMQP fabric
     
     @param iq: input to the thread
@@ -102,9 +102,15 @@ _mmc=ManagerMessagesConsumer(qToManagerConsumer, qFromManagerConsumer)
 _mmc.start()
 
 
-
 class SensorsManagerAgent(object):
+    """
+    Decodes the message from the exchange on "devices.io"
+    and publishes those on the local Bus
     
+    The "routing_key" serves to indicate which sort of
+    "io" operations we are dealing with.
+    
+    """
     LCONFIG = { "%json-decode": 4*60*60
             }
 
@@ -151,7 +157,7 @@ class SensorsManagerAgent(object):
         try:
             hdevice=bits[0]
             hio=bits[1]    
-            op=bits[2]
+            op=bits[2]     ## e.g. din, dout, ain
         except:
             hdevice=None
             hio=None 
@@ -165,12 +171,9 @@ class SensorsManagerAgent(object):
         ##  i.e. ready for extensions
         
     def publishMsg(self, op, msg):
-        serial=msg.get("serial", None)
-        pin=msg.get("pin", None)
-        value=msg.get("value", None)
         mtype="%" + "%s" % op  
-        print "publishMsg: mtype(%s), msg(%s)" % (mtype, msg)     
-        Bus.publish(self, mtype, serial, pin, value)
+        #print "publishMsg: mtype(%s), msg(%s)" % (mtype, msg)     
+        Bus.publish(self, mtype, msg)
 
 
 
