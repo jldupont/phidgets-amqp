@@ -117,7 +117,7 @@ class APIHandler(object):
             
         try:
             self.chan.exchange_declare(exchange=self.EXCH, 
-                                       type="topic", durable=True, auto_delete=False,)
+                                       type="topic", durable=False, auto_delete=True,)
         except Exception,e:
             Bus.publish(self, "%conn-error")
             self.log("%conn-error", "error", 

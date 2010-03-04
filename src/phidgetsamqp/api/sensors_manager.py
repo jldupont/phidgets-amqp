@@ -79,7 +79,7 @@ class ManagerMessagesConsumer(Thread):
         try:
             self.conn = amqp.Connection(insist=True, **self.config)
             self.chan = self.conn.channel()
-            self.chan.queue_declare(queue=self.RQU, durable=True, exclusive=False, auto_delete=False)
+            self.chan.queue_declare(queue=self.RQU, durable=False, exclusive=False, auto_delete=True)
             self.chan.exchange_declare(exchange=self.EXCH, type="topic", durable=True, auto_delete=False,)
             self.chan.queue_bind(queue=self.RQU, exchange=self.EXCH, routing_key=self.RKEY)
             self.chan.basic_consume(queue=self.RQU, no_ack=True, callback=self.amqpCallback, consumer_tag="ctag")
